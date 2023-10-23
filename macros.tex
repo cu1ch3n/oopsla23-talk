@@ -5,12 +5,11 @@
 
 %\newcommand\mynote[3]{}
 
-\newcommand\bruno[1]{~\mynote{Bruno}{red}{#1}}
-\newcommand\shengyi[1]{~\mynote{Shengyi}{blue}{#1}}
-\newcommand\chen[1]{~\mynote{Chen}{orange}{#1}}
+\newcommand\bruno[1]{~\mynote{Bruno}{DeepSkyBlue}{#1}}
+\newcommand\shengyi[1]{~\mynote{Shengyi}{teal}{#1}}
+\newcommand\chen[1]{~\mynote{Chen}{MediumBlue}{#1}}
 
-%\newcommand\bruno[1]{}%{\mynote{Bruno}{red}{#1}}
-%\newcommand\jimmy[1]{}%{\mynote{Jimmy}{blue}{#1}}
+\newcommand\catenate{\mathbin{\text{\ttfamily\upshape ++}}}
 
 \newcommand\wh{\widehat}
 
@@ -27,7 +26,8 @@
 % \newcommand{\elb}[1]{{\setlength\fboxsep{0.5pt}~\colorbox{black!10}{\strut~${\elaborate #1}$~}}}
 \newcommand{\elb}[1]{}
 
-\newcommand{\elab}[1]{{\setlength\fboxsep{0.5pt}~\colorbox{black!10}{\strut~${\elaborate #1}$~}}}
+\newcommand{\textmintinline}[2]{\text{\mintinline{#1}{#2}}}
+\newcommand{\elab}[1]{{\setlength\fboxsep{0.5pt}~\colorbox{white}{\strut~${\elaborate #1}$~}}}
 
 \newcommand\Gm{\Gamma}
 \newcommand\Om{\Omega}
@@ -42,7 +42,7 @@
 \DeclareDocumentCommand \inferrule { s O {} m m o }{%
   \IfBooleanTF{#1}%
   {%
-     \mpr@inferstar@[#2]{#3}{#4}%
+    \mpr@inferstar@[#2]{#3}{#4}%
   }{%
     \mpr@inferrule[#2]{#3}{#4}%
   }%
@@ -57,7 +57,6 @@
 }
 \makeatother
 
-
 % \makeatletter
 % \newcommand{\dummylabel}[2]{\def\@currentlabel{#2}\label{#1}}
 % \makeatother
@@ -69,6 +68,9 @@
 }
 \makeatother
 
+\makeatletter
+\zref@newprop{MyPlainCntValue}{\the\value{\zref@getcurrent{counter}}}%
+
 \newcommand\Mylabel[1]{%
   \zref@labelbyprops{#1}{MyPlainCntValue}%
   \label{#1}%
@@ -77,7 +79,7 @@
 %% This is used for referencing saved MyPlainCntValue-property-values 
 %% of zref-labels:
 \newcommand\MyPlainCntValueRef[1]{%
-   \zref[MyPlainCntValue]{#1}%
+  \zref[MyPlainCntValue]{#1}%
 }%
 \makeatother
 
@@ -91,7 +93,6 @@
   \def\@currentlabelname{\ensuremath{#1}}%
 }
 \makeatother
-
 
 \makeatletter
 \newcounter{nalgRuleCounter}
@@ -108,7 +109,7 @@
 
 \newcommand\jExt{\rightharpoonup}
 
-\newcommand{\tRed}[1]{\textcolor{red}{#1}}
+\newcommand{\tRed}[1]{\textcolor{Salmon}{#1}}
 
 \newcommand{\lam}{} %[2]{\lambda {#1}.~{#2}}
 \RenewDocumentCommand \lam {O{x} m} {\ensuremath{\lambda {#1}.~{#2}}}  % \lambda x.~e --- x is optional. \lam[x]{e}
@@ -138,7 +139,6 @@
 \RenewDocumentCommand \appInfAlg {O{A\to B} O{e} O{\ca} O{\jg}} {{#1}\bullet{#2}\TTo_{#3} {#4}}
 % \NewDocumentCommand \tyInfAlg {m m O{a} O{\jg}} {{#1}\circ{#2}\TTo_{#3} {#4}}
 
-
 \newcommand\ua{}
 \newcommand\ub{}
 \newcommand\ea{}
@@ -153,53 +153,71 @@
 \newcommand\cc{}
 \newcommand\cd{}
 
+\RenewDocumentCommand \ea {O{}} {\ensuremath{\wh\alpha_{#1}}}   % \widehat{\alpha} --- subscript is optional \al[1]
+\RenewDocumentCommand \eb {O{}} {\ensuremath{\wh\beta_{#1}}}    % \widehat{\beta}
 
-\RenewDocumentCommand \ea {O{}} {\wh\alpha_{#1}}   % \widehat{\alpha} --- subscript is optional \al[1]
-\RenewDocumentCommand \eb {O{}} {\wh\beta_{#1}}    % \widehat{\beta}
-
-\RenewDocumentCommand \ua {O{}} {\bar a_{#1}}   % \widehat{\alpha} --- subscript is optional \al[1]
-\RenewDocumentCommand \ub {O{}} {\bar b_{#1}}   
+\RenewDocumentCommand \ua {O{}} {a_{#1}}   % \widehat{\alpha} --- subscript is optional \al[1]
+\RenewDocumentCommand \ub {O{}} {b_{#1}}
 
 \RenewDocumentCommand \ta {O{}} {a_{#1}}   % \widehat{\alpha} --- subscript is optional \al[1]
 \RenewDocumentCommand \tb {O{}} {b_{#1}}    % \widehat{\beta}
 
 \RenewDocumentCommand \sta {O{}} {\tilde a_{#1}}   % \widehat{\alpha} --- subscript is optional \al[1]
-\RenewDocumentCommand \stb {O{}} {\tilde b_{#1}}   
+\RenewDocumentCommand \stb {O{}} {\tilde b_{#1}}
 
 % \RenewDocumentCommand \ca {O{}} { \mathtt{?}a_{#1}}   % \widehat{\alpha} --- subscript is optional \al[1]
 % \RenewDocumentCommand \cb {O{}} { \mathtt{?}b_{#1}}   
 % \RenewDocumentCommand \cc {O{}} { \mathtt{?}c_{#1}}   
 
 \RenewDocumentCommand \ca {O{}} { a_{#1}}   % \widehat{\alpha} --- subscript is optional \al[1]
-\RenewDocumentCommand \cb {O{}} { b_{#1}}   
-\RenewDocumentCommand \cc {O{}} { c_{#1}}   
-\RenewDocumentCommand \cd {O{}} { d_{#1}}   
+\RenewDocumentCommand \cb {O{}} { b_{#1}}
+\RenewDocumentCommand \cc {O{}} { c_{#1}}
+\RenewDocumentCommand \cd {O{}} { d_{#1}}
 
 \newcommand{\blue}[1]{\textcolor{blue}{#1}}
-
 
 \newcommand{\newpageVMiddle}[1]{\null\vfill{#1}\vfill}
 
 % \newcommand{\newRule}[1]{\textcolor{purple}{  #1}}
 
-\newcommand{\newRule}[1]{{\setlength\fboxsep{0.5pt}~\colorbox{black!20}{\strut~${ #1}$~}}}
+% \newcommand{\reducedstrut}{\vrule width 0pt height \ht\strutbox depth \dp\strutbox\relax}
+
+\newcommand{\mystruct}{\vrule width 0pt height .92\ht\strutbox depth .92\dp\strutbox\relax}
+
+\newcommand{\newRule}[1]{{\setlength\fboxsep{0.3pt}\hspace{-\fboxsep}\colorbox{black!20}{\mystruct$~{#1}~$}}}% % \newcommand{\newRule}[1]{\colorbox{black!20}{\ensuremath{#1}}}
 
 \definecolor{commentgreen}{rgb}{0,0.6,0}
 
-\newcommand{\tint}{\text{\mintinline{ocaml}{Int}}}
-\newcommand{\tbool}{\text{\mintinline{ocaml}{Bool}}}
+\newcommand{\tint}{\textmintinline{ocaml}{Int}}
+\newcommand{\tbool}{\textmintinline{ocaml}{Bool}}
+\newcommand{\tshape}{\textmintinline{ocaml}{Shape}}
+\newcommand{\tcircle}{\textmintinline{ocaml}{Circle}}
 
 \newcommand{\java}[1]{\lstinline[language=java]{#1}}
 \newcommand{\haskell}[1]{\lstinline[language=haskell]{#1}}
 
+\makeatletter
+\newcommand{\oset}[3][0ex]{%
+  \mathrel{\mathop{#3}\limits^{
+      \vbox to#1{\kern-2\ex@
+        \hbox{$\scriptstyle#2$}\vss}}}}
+\makeatother
+
+% \newcommand{\ule}{\bar{\le}}
+% \newcommand{\sle}{\mathrel{\stackrel{\sim}{\le}}}
+% \newcommand{\sle}{\ensuremath{~\tilde{\le}~}}
+\newcommand{\sle}{\ensuremath{\lesssim}}
+\newcommand{\ule}{\mathrel{\raisebox{-0.3ex}{\ensuremath{\oset{<}{\scriptstyle \simeq}}}}}
+\newcommand{\tenv}{\Delta}
+
 \newenvironment{mathparshrink}
-  {\begin{@empty}%
+{\begin{@empty}%
     \def \MathparLineskip {\lineskip=0.4em}%
     % \setstretch{0.7}
     % \setlength{\abovedisplayskip}{5pt}
     % \setlength{\belowdisplayskip}{5pt}
     \begin{mathpar}}
-  {\end{mathpar}\end{@empty}}
+      {\end{mathpar}\end{@empty}}
 
 \newcommand{\mtext}[1]{\text{\mintinline{text}{#1}}}
 \newcommand{\scala}[1]{\text{\mintinline{scala}{#1}}}
