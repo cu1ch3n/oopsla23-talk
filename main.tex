@@ -159,7 +159,7 @@ Scala 2 provides some basic support but it \alert{fails} frequently
         x$\textmintinline{ocaml}{ in idFun idInt}
 
 \pdfnote{The first limitation is No support for interdependent bounds. Local type inference forbids the inference of type arguments with interdependent bounds, because they could not find a complete algorithm that deals with such kind of bounds. Scala 2 does provide some basic support for interdependent bounds, but it fails frequently.\nl
-If we define two identity functions, idFun is from type B to type A to A, but the bound of B depends on A, another one is from Int to Int. In Scala 2, we cannot apply idFun to idInt1, because Scala 2 wrongly instantiates A with bottom (which is Nothing in Scala) instead of Int.\nl
+If we define two identity functions, idFun is from type B to type A to A, but the bound of B depends on A, another one is from Int to Int. In Scala 2, we cannot apply idFun to idInt1, because Scala 2 wrongly instantiates A with bottom instead of Int. B is instantiated to (Int -> Int).\nl
 It does not conform to the bound restriction that B is the subtype of A to A, so it is rejected.
 In our calculus, interdependent bounds are supported. It types the equivalent program below.
 }
@@ -214,7 +214,7 @@ While in our calculus, snd 1 can be applied further by deferring the unification
 \end{frame}
 
 
-\begin{frame}[fragile]{Higher-Ranked Type Inference}
+\begin{frame}[fragile]{Higher-rank type inference}
 Take a polymorphic function as the argument of another function
 \begin{minted}{scala}
 def k(f: Int => Int) = 1
