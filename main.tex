@@ -50,9 +50,10 @@
 }
 \date{October 26, 2023}
 \institute{The University of Hong Kong
-\pdfnote{Good afternoon everyone. My name is Cui Chen. I am currently a PhD student at the University of Hong Kong. Today I am delighted to share our work: Greedy Implicit Bounded Quantification.}
+\pdfnote{Good afternoon everyone. My name is Cui Chen. I am currently a PhD student at the University of Hong Kong. Today I am delighted to share our work: Greedy Implicit Bounded Quantification. This is a joint work with Shengyi Jiang and my supervisor Bruno Oliveira.}
 }
-\titlegraphic{\raggedleft\includegraphics[width=0.4\linewidth]{logo.png}}
+
+\titlegraphic{\includegraphics[width=0.22\linewidth]{splash-logo.png}\hfill\includegraphics[width=0.4\linewidth]{logo.png}}
 
 \begin{document}
 
@@ -132,14 +133,13 @@ Scala 2 is based on an improved form of Local type inference, namely colored loc
 \end{frame}
 
 \begin{frame}[fragile]{No support for interdependent bounds}
-Local type inference \alert{forbids} the inference of type arguments with interdependent bounds.
 
 Scala 2 provides some basic support but it \alert{fails} frequently.
 
 \scala{def idFun[A, B <: A => A](x: B): (A => A) = x}
 \scala{def idInt1: (Int => Int) = (x => x)}
 
-\xmark~ In Scala 2, function \scala{idInt2} \alert{fails} to type check:
+\xmark~ In Scala 2, function \scala{idInt2} \alert{fails} to type-check:
 \scala{def idInt2 = idFun(idInt1)}
 \begin{itemize}
     \item \scala{A} is instantiated to $\bot$; \scala{B} is instantiated to $\tint \to \tint$
@@ -172,8 +172,7 @@ def map[A, B](f: A => B, xs: List[A]): List[B] = ...
 \xmark~ In Scala 2, function \scala{mapPlus1} \alert{fails} to type-check:\\
 \scala{def mapPlus1: List[Int] = map(x => 1 + x, List(1, 2, 3))}
 
-As an argument, \scala{x => 1 + x} must have its type synthesized first,
-but we can never synthesize its type in local type inference.
+Local type inference requires the types of function arguments to be synthesized first, but we can never synthesize the type of \scala{x => 1 + x}.
 
 \pause
 
@@ -182,20 +181,20 @@ but we can never synthesize its type in local type inference.
 
 \pause
 
-\cmark~ \name can type-check the program without annotations:
+\cmark~ \name can type-check the program without additional annotations:
 
 \textmintinline{ocaml}{let map}$:\all[\ta][\top]{\all[\tb][\top](\ta \to
       \tb) \to [\ta]\to [\tb]} = \texttt{...}$ \\
       \textmintinline{ocaml}{	 in map}$~(\lam {x + 1})~ [1,2,3]$
 
-\pdfnote{The second limitation is Hard-to-synthesize arguments. We may define a map function in Scala like this. It has 2 type arguments, and takes a function from type A to type B, and a list of A, and returns a list of B. However, when it is applied to an anonymous function. It fails to type check. That is because, as an argument, the anonymous function must have its type synthesized first, but we can never synthesize its tyoe in local type inference.\nl
+\pdfnote{The second limitation is Hard-to-synthesize arguments. We may define a map function in Scala like this. It has 2 type arguments, and takes a function from type A to type B, and a list of A, and returns a list of B. However, when it is applied to an anonymous function. It fails to type-check. That is because, Local type inference requires the types of function arguments to be synthesized first, but we can never synthesize the type of this anonymous function.\nl
 A workaround is providing type annotations to the function argument. Like we can annotate x with Int here.\nl
-Our calculus can type-check the program without annotations.
+Our calculus can type-check the program without additional annotations.
 }
 \end{frame}
 
 \begin{frame}[fragile]{No best argument}
-Sometimes the type variable to instantiate appears \textbf{invariantly} in the output type, but the constraints are not enough to decide a \textbf{unique} instantiation.
+Sometimes invariant type variables cannot decide a \textbf{unique} instantiation.
 \begin{minted}{scala}
 def snd[A]: (Int => A => A) = (x => y => y)
 def id = snd(1)
@@ -217,7 +216,7 @@ Take a polymorphic function as the argument of another function.
 def k(f: Int => Int) = 1
 def g(f: ([A <: Int] => A => A) => Int) = 1
 \end{minted}
-\xmark~ Scala 3\footnote{Scala 2 does not support higher-rank types}, \alert{fails} to type check \scala{def f = g(k)}:
+\xmark~ Scala 3\footnote{Scala 2 does not support higher-rank types}, \alert{fails} to type-check \scala{def f = g(k)}:
 \begin{itemize}
     \item \scala{k} has type $(\tint \to \tint) \to \tint$
     \item \scala{g} accepts argument with type $(\all[\ta][\tint]{\ta \to \ta}) \to \tint$
@@ -232,9 +231,9 @@ def g(f: ([A <: Int] => A => A) => Int) = 1
       \textmintinline{ocaml}{	 g}$:((\all[\ta][\tint]{\ta \to \ta}) \to
         \tint) \to \tint = \lam[f] 1$\textmintinline{ocaml}{ in g k}
 
-\pdfnote{Higher-ranked type inference is an important feature. It is very useful when we would like to take a polymorphic function as the argument of another function. However, the subtyping relation employed in local type inference is restrictive and prohibits type-checking many programs with higher-rank types. \nl
-In this program, k has type (Int -> Int) -> Int, and g is a function that accepts arugument with this type. We would expect the type inference algorithm can implicitly instantiate A with Int, so that we can apply g to k. However, this fails to type check in Scala 3 due to its lack of implicit polymorphism.\nl
-Our calculus has better support for higher-rank polymorphism. It can implicitly instantiate the type variable A here with Int. and the program succeeds to type check.
+\pdfnote{Higher-rank type inference is an important feature. It is very useful when we would like to take a polymorphic function as the argument of another function. However, the subtyping relation employed in local type inference is restrictive and prohibits type-checking many programs with higher-rank types. \nl
+In this program, k has type (Int -> Int) -> Int, and g is a function that accepts arugument with this type. We would expect the type inference algorithm can implicitly instantiate A with Int, so that we can apply g to k. However, this fails to type-check in Scala 3 due to its lack of implicit polymorphism.\nl
+Our calculus has better support for higher-rank polymorphism. It can implicitly instantiate the type variable A here with Int. and the program succeeds to type-check.
 }
 \end{frame}
 
@@ -293,8 +292,7 @@ $$ \begin{array}{l@{\quad}lcl}
     \vspace{0.5em}
   \end{array}$$
 
-Compared with $F_\le^e$, universal types $\all A$ and type abstractions $\tlam e : A$ now
-incorporate a bound $B$ to support bounded quantification.
+Compared with $F_\le^e$, \name now incorporates bounds to support bounded quantification.
 
 \pdfnote{
 This is the syntax of our calculus. Compared with elementary type inference. The change is that the Universal types and type abstractions now incorporate a bound B to support bounded quantification.
@@ -334,13 +332,13 @@ This is the syntax of our calculus. Compared with elementary type inference. The
     }[\mathtt{{\le}{\to}}]\label{infrule:sub_arr}
     \and
     \inferrule*[right=$\mathtt{{\le}\forall L}$]
-    {\Psi\vdash^m\tau\quad\Psi\vdash \tau\le B\elb{Co_2}\quad \Psi\vdash
+    {\Psi\vdash^m\tau\quad\highlight{$\Psi\vdash \tau\le B$}\elb{Co_2}\quad \Psi\vdash
       [\tau/\ta] A \le C \elb{Co_1}\quad  C \text { is not a $\forall$ type} }
     {\Psi\vdash \all A \le C \elb{\lam[(x:|\all A|)]
         Co_1~)((x~@~|\tau|)~Co_2)}}[\mathtt{{\le}\forall L}]\label{infrule:sub_foralll}
     \and
     \inferrule*[right=$\mathtt{{\le}\forall}$]
-    {\Psi\vdash B_1\le B_2\elb{*}\quad\Psi\vdash B_2\le B_1\elb{Co_2}\quad\Psi,
+    {\highlight{$\Psi\vdash B_1\le B_2$}\elb{*}\quad\highlight{$\Psi\vdash B_2\le B_1$}\elb{Co_2}\quad\Psi,
       \ta\sle B_2 \vdash A_1 \le A_2 \elb{Co_1}}
     {\Psi\vdash \all[\ta][B_1] A_1 \le
       \all[\ta][B_2]{A_2}\elb{\lam[(x:|\all[a][B_1] A_1|)]{\tlamf{\lam[(f:a\to
@@ -352,7 +350,7 @@ These are the declarative subtyping rules of our system. It is based on standard
 }
 \end{frame}
 
-\begin{frame}{Non-syntactical Monotype}
+\begin{frame}{Non-syntactic Monotype}
 
 With bounded quantification, if we treat all type variables as monotypes, transitivity breaks due to rule ${\le}\mathtt{VarTrans}$.
 
@@ -383,8 +381,10 @@ In \name, only type variables with bound $\top$ or monotype bounds are regarded 
   {\ta\le A \in \Psi\quad \Psi \vdash^m A}{\Psi \vdash^m \ta}
 \end{mathparshrink}
 
-\pdfnote{If we treat all type variables as monotypes, transitivity breaks. type variables with foralls in their bounds, like the type variable b here, can bridge two forall types with different bounds, which is not accepted in our subtyping. So in Fsub b, only type variables with bound top or monotype bounds are regarded as monotypes.}
+\pdfnote{With bounded quantification, if we treat all type variables as monotypes, transitivity breaks due to the variable transitivity rule. type variables with foralls in their bounds, like the type variable b here, can bridge two forall types with different bounds, which is not accepted in our subtyping. So in Fsub b, only type variables with bound top or monotype bounds are regarded as monotypes.}
 \end{frame}
+
+\setlength{\leftmargini}{15pt}
 
 \begin{frame}{Two Variants of \name: Complete Algorithm or Not?}
 
@@ -393,12 +393,12 @@ $$\tau_1 \le \tau_2 \Longrightarrow \tau_1 = \tau_2$$
 
 \textbf{Variant 1}: \emph{sound}, \emph{complete} and \emph{decidable}
 \begin{itemize}
-	\item[] Only type variables with \emph{bound $\top$} are regarded as monotypes
+	\item[] Type variables with \emph{bound $\top$} are monotypes
 \end{itemize}
 
-\textbf{Variant 2}: \emph{sound} but \emph{incomplete}; types more programs
+\textbf{Variant 2}: \emph{sound} but \emph{incomplete}; type-checks more programs
 \begin{itemize}
-	\item[] Only type variables with \emph{bound $\top$} or \emph{monotype bounds} are regarded as monotypes
+	\item[] Type variables with \emph{bound $\top$} or \emph{monotype bounds} are monotypes
 	\item[] It breaks the property due to rule ${\le}\mathtt{VarTrans}$:
 	\begin{itemize}
 		\item[] $a \le \tint \vdash a \le \tint$ but $a \ne \tint$
@@ -410,7 +410,7 @@ $$\tau_1 \le \tau_2 \Longrightarrow \tau_1 = \tau_2$$
 All such approaches rely on the property that monotype subtyping implies the equality of monotypes. This ensures that if the first instantiation works, then it must also work for subsequent instantiations. However, without care, the property easily breaks in the presence of more expressive subtyping relations, like bounded quantification.\nl
 So, in our paper, we present two variants of Fsub b.\nl
 In the first variant, only type variables with bound top are regarded as monotypes. With this monotype definition, the property holds, and we get a sound, complete and decidable algorithm.
-In the second variant, type variables with monotype bounds are also regarded as monotypes. It breaks the property. For example, in this context, type variable a is a subtype of Int, but a is not Int. so this variant is sound but incomplete. The benefit is that it types more programs.
+In the second variant, type variables with monotype bounds are also regarded as monotypes. It breaks the property. For example, in this context, type variable a is a subtype of Int, but a is not Int. so this variant is sound but incomplete. The benefit is that it type-checks more programs.
 }
 \end{frame}
 
@@ -433,7 +433,6 @@ In the second variant, type variables with monotype bounds are also regarded as 
 %\end{frame}
 
 \setlength{\leftmargini}{1.5pt}
-
 
 \begin{frame}[fragile]{Contributions}
     \begin{itemize}
