@@ -346,13 +346,13 @@ This is the syntax of our calculus. Compared with elementary type inference. The
             ))}}}}[\mathtt{{\le}\forall}]\label{infrule:sub_forall}
   \end{mathparshrink}
 \pdfnote{
-These are the declarative subtyping rules of our system. It is based on standard higher-ranked polymorphic systems. The difference between our system and the elementary type inference is that we have the variable transitivity rule, and all the foralls now incorporate a bound. These two differences introduce most of the difficulties in proofs, and motivate us to rethink the question: what should be considered as monotype?
+These are the declarative subtyping rules of our system. It is based on standard higher-ranked polymorphic systems. The difference between our system and the elementary type inference is that we have the variable transitivity rule, and all the foralls now incorporate a bound. These two differences cause problems in certain important properties, and motivate us to rethink the question: what kind of type variables should be considered as monotypes?
 }
 \end{frame}
 
 \begin{frame}{Non-syntactical Monotype}
 
-If we treat all type variables as monotypes, transitivity breaks
+With bounded quantification, if we treat all type variables as monotypes, transitivity breaks due to rule ${\le}\mathtt{VarTrans}$
 
 \begin{itemize}
   \item[\cmark] $\Psi \vdash A \le B$ :
@@ -424,7 +424,7 @@ In the second variant, type variables with monotype bounds are also regarded as 
 %In the algorithm, we
 %\begin{itemize}
 %    \item replace it by a placeholder \textbf{(existential variable)} to solve
-%    \item put all the todos in a unified list (\textbf{worklist}): track the scope easily
+%    \item put all the judgements to solve in a unified list (\textbf{worklist}): track the scope easily
 %\end{itemize}
 %$$\Gamma \Vdash \forall (\ta \le B) .~ A \le C \longrightarrow \Gamma, \newRule{\ea} \Vdash \newRule{\ea} \le B \Vdash [\newRule{\ea} / \ta]A \le C$$
 %\pdfnote{... The worklist is like a stack, each time we peek the top of the stack, follow the instructions of the rules, like popping the top out, or add some new todos into the stack. When the worklist becomes empty, we succeed in typing. Otherwise, if it has no rule to apply, we know that the typing fails.}
@@ -435,22 +435,35 @@ In the second variant, type variables with monotype bounds are also regarded as 
 
 \begin{frame}[fragile]{Contributions}
     \begin{itemize}
-		\item A declarative bidirectional type system
+		\item \textbf{A declarative bidirectional type system}
 			\begin{itemize}
 				\item Predicative implicit bounded quantification
 				\item Impredicative explicit type applications
 				\item Checking subsumption, type safety and completeness w.r.t. kernel $F_{\le}$
 			\end{itemize}
-		\item A sound, complete and decidable algorithm of the variant 1	\begin{itemize}
+		\item \textbf{A \textit{sound}, \textit{complete} and \textit{decidable} algorithm of variant 1	}\begin{itemize}
 				\item Worklist formulation\footnote{\includegraphics[scale=.8]{beamericonarticle} Jinxu Zhao, Bruno C. d. S. Oliveira, and Tom Schrijvers. A Mechanical Formalization of Higher-Ranked Polymorphic Type Inference. ICFP 2019.}
 			\end{itemize}
-		\item A sound algorithm of the variant 2 with monotype subtyping
-        \item Mechanical formalization and implementation
+		\item \textbf{A \textit{sound} algorithm of variant 2 with monotype subtyping}
+        \item \textbf{Mechanical formalization and implementation}
               \begin{itemize}
               	\item All theorems are verified in Abella (LOC: 24,919)
               	\item Haskell implementation
               \end{itemize}
     \end{itemize}
+\pdfnote{Finally, let me conclude the contributions of our work. Firstly, we proposed a... And for variant 1, we have a sound, complete and decidable algorithm. Our algorithm employs a worklist formulation inspired by previous work. For the second variant with monotype subtyping, we have a sound algorithm. All the theorems have been mechanically formalized in the Abella theorem prover, with about 25 thousand lines of code. and we also have a simple Haskell implementation.}
+\end{frame}
+
+\begin{frame}[standout]
+	Q\&A
+	
+	\vspace{5mm}
+
+	\small{Implementation, proofs, and the extended version of the paper are available at: https://doi.org/10.5281/zenodo.8202095}
+	
+	\vspace{5mm}
+	
+	\includegraphics[width=0.25\linewidth]{qr-code.png}
 \end{frame}
 
 \end{document}
