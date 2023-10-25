@@ -35,6 +35,7 @@
 \newcommand{\pdfnote}[1]{\marginnote{\pdfcomment[icon=note]{#1}}}
 %\newcommand{\pdfnote}[1]{}
 
+
 \input{macros.tex}
 
 \pdfstringdefDisableCommands{%
@@ -244,7 +245,7 @@ Our calculus has better support for higher-rank polymorphism. It can implicitly 
 
 \begin{frame}[fragile]{\name Calculus}
 
-\name extends {$F^{e}_{\le}$\xspace} calculus\footnote{Jinxu Zhao, Bruno C. d. S. Oliveira. Elementary Type Inference. ECOOP 2022.} with bounded quantification
+\name extends {$F^{e}_{\le}$\xspace} calculus\footnote{\includegraphics[scale=.8]{beamericonarticle} Jinxu Zhao, Bruno C. d. S. Oliveira. Elementary Type Inference. ECOOP 2022.} with bounded quantification
 
 \begin{itemize}
     \item a variant of kernel $F_\le$
@@ -383,7 +384,7 @@ In \name, only type variables with bound $\top$ or monotype bounds are regarded 
 \pdfnote{If we treat all type variables as monotypes, transitivity breaks. type variables with foralls in their bounds, like the type variable b here, can bridge two forall types with different bounds, which is not accepted in our subtyping. So in Fsub b, only type variables with bound top or monotype bounds are regarded as monotypes.}
 \end{frame}
 
-\begin{frame}{Two Variants of \name: Complete or Incomplete}
+\begin{frame}{Two Variants of \name: Complete Algorithm or Not?}
 
 In existing predicative HRP approaches, finding implicit instantiations is \textbf{greedy}. They rely on the property:
 $$\tau_1 \le \tau_2 \Longrightarrow \tau_1 = \tau_2$$
@@ -429,26 +430,24 @@ In the second variant, type variables with monotype bounds are also regarded as 
 %\pdfnote{... The worklist is like a stack, each time we peek the top of the stack, follow the instructions of the rules, like popping the top out, or add some new todos into the stack. When the worklist becomes empty, we succeed in typing. Otherwise, if it has no rule to apply, we know that the typing fails.}
 %\end{frame}
 
+\setlength{\leftmargini}{1.5pt}
+
+
 \begin{frame}[fragile]{Contributions}
     \begin{itemize}
 		\item A declarative bidirectional type system
 			\begin{itemize}
-				\item predicative implicit bounded quantification
-				\item impredicative explicit type applications
+				\item Predicative implicit bounded quantification
+				\item Impredicative explicit type applications
+				\item Checking subsumption, type safety and completeness w.r.t. kernel $F_{\le}$
 			\end{itemize}
-		\item An algorithmic formulation of the type system
-			\begin{itemize}
-				\item sound, complete and decidable
-				\item worklist formulation\footnote{Jinxu Zhao, Bruno C. d. S. Oliveira, and Tom Schrijvers. A Mechanical Formalization of Higher-Ranked Polymorphic Type Inference. ICFP 2019.}
+		\item A sound, complete and decidable algorithm of the variant 1	\begin{itemize}
+				\item Worklist formulation\footnote{\includegraphics[scale=.8]{beamericonarticle} Jinxu Zhao, Bruno C. d. S. Oliveira, and Tom Schrijvers. A Mechanical Formalization of Higher-Ranked Polymorphic Type Inference. ICFP 2019.}
 			\end{itemize}
-		\item A variant of \name with monotype subtyping
-			\begin{itemize}
-				\item at the cost of completeness 
-			\end{itemize}
-		\item Completeness with respect to kernel $F_{\le}$
+		\item A sound algorithm of the variant 2 with monotype subtyping
         \item Mechanical formalization and implementation
               \begin{itemize}
-              	\item All are verified in Abella (LOC: 24,919)
+              	\item All theorems are verified in Abella (LOC: 24,919)
               	\item Haskell implementation
               \end{itemize}
     \end{itemize}
