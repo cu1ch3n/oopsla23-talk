@@ -59,7 +59,7 @@
 \maketitle
 
 \begin{frame}[fragile]{Bounded Quantification}
-Mainstream OOP languages (Java, Scala, C\#...) have polymorphic type systems with subtyping and \textbf{bounded quantification}
+Mainstream OOP languages (Java, Scala, C\#...) have polymorphic type systems with subtyping and \textbf{bounded quantification}.
 \begin{minted}[escapeinside=||]{java}
 public static |\tikzmark{codeblock}\highlight{<S extends Comparable>}| S min(S a, S b) {
     if (a.compareTo(b) <= 0) {
@@ -69,9 +69,9 @@ public static |\tikzmark{codeblock}\highlight{<S extends Comparable>}| S min(S a
     }
 }
 \end{minted}
-The type of \texttt{min}: \tikzmark{mathblock}\highlight{$\forall{(\texttt{S} \le \texttt{Comparable})}$} ${.~\texttt{S} \to \texttt{S} \to \texttt{S}}$
+The type of \texttt{min}: \tikzmark{mathblock}\highlight{$\forall{(\texttt{S} \le \texttt{Comparable})}$} ${.~\texttt{S} \to \texttt{S} \to \texttt{S}}$.
 
-However, there is little work on \textbf{type inference} algorithms supporting bounded quantification
+However, there is little work on \textbf{type inference} algorithms supporting bounded quantification.
 \begin{tikzpicture}[remember picture, overlay]
     \node[align=center, text width=7cm] (bound) at ($(current page.center)+(2,0.1)$) {
     \begin{block}{Bounded Quantification}
@@ -85,7 +85,7 @@ However, there is little work on \textbf{type inference} algorithms supporting b
 \end{frame}
 
 \begin{frame}[fragile]{Type Inference}
-\textbf{Type inference} enables removing redundant type annotations
+\textbf{Type inference} enables removing redundant type annotations.
 
 \begin{minted}[escapeinside=||]{java}
 List<String> numbers = Arrays.asList("1", "2", "3", "4", "5");
@@ -100,7 +100,7 @@ The type of \scala{map} in Java is:\\
     \item Type argument inference: \scala{map} is instantiated with type \scala{R = Integer}
     \item Argument inference: \scala{s} has type \scala{String}
 \end{itemize}
-\pdfnote{Type inference enables removing redundant type annotations from programs and can reduce the burden of programmers. When you write the code, the compiler fills the missing types for you and keeps your code very concise and more readable.\nl
+\pdfnote{Type inference enables removing redundant type annotations from programs and can reduce the burden of programmers. When we write the code, the compiler fills the missing types for us and keeps our code very concise and more readable.\nl
 Take the code also in Java as an example, it processes a list of strings representing numbers, and converts the strings into numbers,
 and filters the even numbers. \nl
 In this code, we don't need to provide the type annotations when using the function map, filter, etc. One thing to note here is that the list functions are polymorphic. Here is the type of the map function in Java.\nl
@@ -111,7 +111,7 @@ And it can also infer that s has type String, since numbers is a list of Strings
 
 
 \begin{frame}[fragile]{Research on OOP Type Inference}
-Surprisingly little work devoted to practical OOP type inference
+Surprisingly little work devoted to practical OOP type inference:
 \begin{itemize}
     \item Most production compilers (Java/C\#, etc) use algorithms loosely based on:
     \begin{itemize}
@@ -124,29 +124,26 @@ Surprisingly little work devoted to practical OOP type inference
         \qquad \textbf{Colored local type inference}. POPL 2001.
     \end{itemize}
 \end{itemize}
-\textbf{Local type inference} suffers from some limitations. Next we will identify these limitations in Scala 2\footnote{Scala 3 has some improvements, but it has not been formally studied.}, and compare it with \name
+\textbf{Local type inference} suffers from some limitations. Next we will identify these limitations in Scala 2\footnote{The implementation of Scala 2 contains some improvements. Scala 3 has more improvements, but it has not been formally studied. Scala 2 type inference remains more faithful to the original work of local type inference.}, and compare it with \name.
 \pdfnote{
 Type inference is very important in a modern programming language. But surprisingly, there is little work devoted to practical OOP type inference. Currently, most production compilers (Java/C\#, etc) use algorithms loosely based on local type inference. And their algorithms are not formally studied and some problems regarding unsoundness and incompleteness have been found.\nl
-Scala 2 is based on an improved form of Local type inference, namely colored local type inference. Though Local type inference is the most widely used technique for languages with bounded quantification. It suffers from some limitations.
-	Next, we will identify these limitations in Scala 2, and compare it with our calculus Fsub b.
-}
+Scala 2 is based on an improved form of Local type inference, namely colored local type inference. Though Local type inference is the most widely used technique for languages with bounded quantification. It suffers from some limitations.\nl
+	Next, we will identify these limitations in Scala 2, and compare it with our calculus Fsub b. It is worth noting that the implementation of Scala 2 contains some improvements compared to the algorithms formalized by calculi with local type inference. It enables more programs to type-check. Scala 3 has more improvements, but it has not been formally studied. Scala 2 type inference remains more faithful to the original work of local type inference. So we compare our calculus with Scala 2. }
 \end{frame}
 
 \begin{frame}[fragile]{No support for interdependent bounds}
-Local type inference \alert{forbids} the inference of type arguments with interdependent bounds
+Local type inference \alert{forbids} the inference of type arguments with interdependent bounds.
 
-Scala 2 provides some basic support but it \alert{fails} frequently
+Scala 2 provides some basic support but it \alert{fails} frequently.
 
 \scala{def idFun[A, B <: A => A](x: B): (A => A) = x}
 \scala{def idInt1: (Int => Int) = (x => x)}
-
-\pause
 
 \xmark~ In Scala 2, function \scala{idInt2} \alert{fails} to type check:
 \scala{def idInt2 = idFun(idInt1)}
 \begin{itemize}
     \item \scala{A} is instantiated to $\bot$; \scala{B} is instantiated to $\tint \to \tint$
-    \item \xmark~ \scala{B <: A => A} is not true: $\tint \to \tint \le \bot \to \bot$ is not true
+    \item \xmark~ \scala{B <: A => A} is not true: $\tint \to \tint \le \bot \to \bot$ is not true.
 \end{itemize}
 
 \pause
@@ -158,7 +155,7 @@ Scala 2 provides some basic support but it \alert{fails} frequently
 \textmintinline{ocaml}{  idInt}$:\tint \to \tint = \lam
         x$\textmintinline{ocaml}{ in idFun idInt}
 
-\pdfnote{The first limitation is No support for interdependent bounds. Local type inference forbids the inference of type arguments with interdependent bounds, because they could not find a complete algorithm that deals with such kind of bounds. Scala 2 does provide some basic support for interdependent bounds, but it fails frequently.\nl
+\pdfnote{The first limitation is No support for interdependent bounds. Local type inference forbids the inference of type arguments with interdependent bounds, because they could not find a complete algorithm that deals with such kinds of bounds. Scala 2 does provide some basic support for interdependent bounds, but it fails frequently.\nl
 If we define two identity functions, idFun is from type B to type A to A, but the bound of B depends on A, another one is from Int to Int. In Scala 2, we cannot apply idFun to idInt1, because Scala 2 wrongly instantiates A with bottom instead of Int. B is instantiated to (Int -> Int).\nl
 It does not conform to the bound restriction that B is the subtype of A to A, so it is rejected.
 In our calculus, interdependent bounds are supported. It types the equivalent program below.
@@ -172,20 +169,20 @@ In our calculus, interdependent bounds are supported. It types the equivalent pr
 def map[A, B](f: A => B, xs: List[A]): List[B] = ...
 \end{minted}
 
-\xmark~ In Scala 2, function \scala{mapPlus1} \alert{fails} to type check\\
+\xmark~ In Scala 2, function \scala{mapPlus1} \alert{fails} to type-check:\\
 \scala{def mapPlus1: List[Int] = map(x => 1 + x, List(1, 2, 3))}
 
 As an argument, \scala{x => 1 + x} must have its type synthesized first,
-but we can never synthesize its type in local type inference
+but we can never synthesize its type in local type inference.
 
 \pause
 
-\cmark~ Workaround: Provide \textbf{type annotations} to the function argument\\
+\cmark~ Workaround: Provide \textbf{type annotations} to the function argument.\\
 \mintinline[escapeinside=||]{scala}{def mapPlus2: List[Int] = map((x|\highlight{: Int}|) => 1 + x, List(1, 2, 3))}
 
 \pause
 
-\cmark~ \name can type the program without annotations
+\cmark~ \name can type-check the program without annotations:
 
 \textmintinline{ocaml}{let map}$:\all[\ta][\top]{\all[\tb][\top](\ta \to
       \tb) \to [\ta]\to [\tb]} = \texttt{...}$ \\
@@ -193,44 +190,44 @@ but we can never synthesize its type in local type inference
 
 \pdfnote{The second limitation is Hard-to-synthesize arguments. We may define a map function in Scala like this. It has 2 type arguments, and takes a function from type A to type B, and a list of A, and returns a list of B. However, when it is applied to an anonymous function. It fails to type check. That is because, as an argument, the anonymous function must have its type synthesized first, but we can never synthesize its tyoe in local type inference.\nl
 A workaround is providing type annotations to the function argument. Like we can annotate x with Int here.\nl
-Our calculus can type the program without annotations.
+Our calculus can type-check the program without annotations.
 }
 \end{frame}
 
 \begin{frame}[fragile]{No best argument}
-Sometimes the type variable to instantiate appears \textbf{invariantly} in the output type, but the constraints are not enough to decide a \textbf{unique} instantiation
+Sometimes the type variable to instantiate appears \textbf{invariantly} in the output type, but the constraints are not enough to decide a \textbf{unique} instantiation.
 \begin{minted}{scala}
 def snd[A]: (Int => A => A) = (x => y => y)
 def id = snd(1)
 \end{minted}
-\xmark~ In Scala 2, the type of \scala{id} is inferred as $\bot \to \bot$. Thus \scala{id} cannot be applied further
+\xmark~ In Scala 2, the type of \scala{id} is inferred as $\bot \to \bot$. Thus \scala{id} cannot be applied further.
 
-\cmark~ In \name, \ocaml{snd}$~1$ can be applied further by deferring the unification\\
+\cmark~ In \name, unification is deferred. \ocaml{snd}$~1$ can be applied further.\\
 \ocaml{let snd }$: \all[\ta][\top]{}\tint \to (\ta \to \ta) \to \ta \to \ta = \Lambda\ta.~\lam{}\lam[y] y$ \ocaml{ in snd}$~1$\\
 \pdfnote{When the type variable to instantiate appears invariantly in the output type, but the constraints are not enough to decide a unique instantiation, local type inference fails to provide any instantiations. In such cases, Scala 2 still infers a type, but the type can be meaningless. \nl
 For example, when applying the function snd to 1, the constraints are not enough to decide a unique instantiation of A. Scala 2 still infers the type of id as bottom to bottom. But it is meaningless, id cannot be applied further.\nl
-While in our calculus, snd 1 can be applied further by deferring the unification.
+While in our calculus, unification is deferred. and snd 1 can be applied further.
 }
 \end{frame}
 
 
 \begin{frame}[fragile]{Higher-rank type inference}
-Take a polymorphic function as the argument of another function
+Take a polymorphic function as the argument of another function.
 \begin{minted}{scala}
 def k(f: Int => Int) = 1
 def g(f: ([A <: Int] => A => A) => Int) = 1
 \end{minted}
-\xmark~ Scala 3\footnote{Scala 2 does not support higher-rank types}, \alert{fails} to type check \scala{def f = g(k)}
+\xmark~ Scala 3\footnote{Scala 2 does not support higher-rank types}, \alert{fails} to type check \scala{def f = g(k)}:
 \begin{itemize}
     \item \scala{k} has type $(\tint \to \tint) \to \tint$
     \item \scala{g} accepts argument with type $(\all[\ta][\tint]{\ta \to \ta}) \to \tint$
     \item  \xmark~ $(\tint \to \tint) \to \tint \le (\all[\ta][\tint]{\ta \to \ta}) \to \tint$ is rejected
     \begin{itemize}
-        \item due to its lack of \textbf{implicit polymorphism}
+        \item due to its lack of \textbf{implicit polymorphism}.
     \end{itemize}
 \end{itemize}
 
-\cmark \name has better support for higher-rank polymorphism  \textmintinline{ocaml}{let k }$: (\tint \to \tint) \to \tint = \lam[f]
+\cmark \name has better support for higher-rank polymorphism:\\\textmintinline{ocaml}{let k }$: (\tint \to \tint) \to \tint = \lam[f]
       1$, \\
       \textmintinline{ocaml}{	 g}$:((\all[\ta][\tint]{\ta \to \ta}) \to
         \tint) \to \tint = \lam[f] 1$\textmintinline{ocaml}{ in g k}
@@ -245,7 +242,7 @@ Our calculus has better support for higher-rank polymorphism. It can implicitly 
 
 \begin{frame}[fragile]{\name Calculus}
 
-\name extends {$F^{e}_{\le}$\xspace} calculus\footnote{\includegraphics[scale=.8]{beamericonarticle} Jinxu Zhao, Bruno C. d. S. Oliveira. Elementary Type Inference. ECOOP 2022.} with bounded quantification
+\name extends {$F^{e}_{\le}$\xspace} calculus\footnote{\includegraphics[scale=.8]{beamericonarticle} Jinxu Zhao, Bruno C. d. S. Oliveira. Elementary Type Inference. ECOOP 2022.} with bounded quantification.
 
 \begin{itemize}
     \item a variant of kernel $F_\le$
@@ -263,7 +260,12 @@ Our calculus has better support for higher-rank polymorphism. It can implicitly 
 %        \item A \textbf{sound}, \textbf{complete} and \textbf{decidable} algorithm
     \end{itemize}
 \end{itemize}
-Philosophy: infer easy instantiations; use explicit annotations for hard instantiations
+\textbf{Philosophy}
+\vspace{-2mm}
+\begin{itemize}
+	\item \underline{infer} \alert{easy} instantiations
+	\item use \underline{explicit annotations} for \alert{hard} instantiations
+\end{itemize}
 \pdfnote{Next we will start to introduce our calculus. Our calculus extends the earlier work (Elementary type inference) with bounded quantification. It is a variant of kernel Fsub. Different from local type inference, it employs global type inference, so it is capable of solving long-distance constraints.\nl
 It follows the similar philosophy as Elementary Type Inference, we only infer easy instantiations, and use explicit annotations for hard instantiations. So our system has the implicit instantiation for monotypes. Like the example we showed before, we can implicitly instantiate A with Int. For hard instantiations like polytypes. We use explicit type application to allow users to provide the instantiations.\nl
 %Our calculus comes with a sound, complete and decidable algorithm which is formally studied.
@@ -292,7 +294,7 @@ $$ \begin{array}{l@{\quad}lcl}
   \end{array}$$
 
 Compared with $F_\le^e$, universal types $\all A$ and type abstractions $\tlam e : A$ now
-incorporate a bound $B$ to support bounded quantification
+incorporate a bound $B$ to support bounded quantification.
 
 \pdfnote{
 This is the syntax of our calculus. Compared with elementary type inference. The change is that the Universal types and type abstractions now incorporate a bound B to support bounded quantification.
@@ -352,7 +354,7 @@ These are the declarative subtyping rules of our system. It is based on standard
 
 \begin{frame}{Non-syntactical Monotype}
 
-With bounded quantification, if we treat all type variables as monotypes, transitivity breaks due to rule ${\le}\mathtt{VarTrans}$
+With bounded quantification, if we treat all type variables as monotypes, transitivity breaks due to rule ${\le}\mathtt{VarTrans}$.
 
 \begin{itemize}
   \item[\cmark] $\Psi \vdash A \le B$ :
@@ -451,7 +453,8 @@ In the second variant, type variables with monotype bounds are also regarded as 
               	\item Haskell implementation
               \end{itemize}
     \end{itemize}
-\pdfnote{Finally, let me conclude the contributions of our work. Firstly, we proposed a... And for variant 1, we have a sound, complete and decidable algorithm. Our algorithm employs a worklist formulation inspired by previous work. For the second variant with monotype subtyping, we have a sound algorithm. All the theorems have been mechanically formalized in the Abella theorem prover, with about 25 thousand lines of code. and we also have a simple Haskell implementation.}
+\pdfnote{Finally, let me conclude the contributions of our work. Firstly, we proposed a...\nl
+And for variant 1, we have a sound, complete and decidable algorithm. Our algorithm employs a worklist formulation inspired by previous work. For the second variant with monotype subtyping, we have a sound algorithm. All the theorems have been mechanically formalized in the Abella theorem prover, with about 25 thousand lines of code. and we also have a simple Haskell implementation.}
 \end{frame}
 
 \begin{frame}[standout]
